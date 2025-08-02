@@ -1,5 +1,6 @@
 import React from 'react';
 import { MetricData } from '../types';
+import { formatTimestamp } from '../utils/formatters';
 
 interface ChartProps {
   data: MetricData[];
@@ -22,12 +23,13 @@ export const Chart: React.FC<ChartProps> = ({ data, title, color, formatValue })
 
   const maxValue = Math.max(...data.map(d => d.value));
   const minValue = Math.min(...data.map(d => d.value));
+  const chartWidth = Math.max(data.length * 10, 400);
 
   return (
     <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50">
       <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
       <div className="relative h-64">
-        <svg className="w-full h-full" viewBox={`0 0 ${data.length * 10} 200`}>
+        <svg className="w-full h-full" viewBox={`0 0 ${chartWidth} 200`}>
           <defs>
             <linearGradient id={`gradient-${color}`} x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor={color} stopOpacity="0.3" />
@@ -41,7 +43,7 @@ export const Chart: React.FC<ChartProps> = ({ data, title, color, formatValue })
               key={i}
               x1="0"
               y1={i * 40}
-              x2={data.length * 10}
+              x2={chartWidth}
               y2={i * 40}
               stroke="#374151"
               strokeWidth="0.5"
@@ -69,7 +71,37 @@ export const Chart: React.FC<ChartProps> = ({ data, title, color, formatValue })
           
           {/* Data points */}
           {data.map((d, i) => (
-            <circle
+            <g key={i}>
+              <circle
+                cx={i * 10}
+                cy={200 - ((d.value - minValue) / (maxValue - minValue)) * 180}
+                r="3"
+                fill={color}
+                className="hover:r-4 transition-all duration-200"
+              />
+              <title>{`${formatTimestamp(d.timestamp)}: ${formatValue(d.value)}`}</title>
+            </g>
+          ))}
+        </svg>
+        
+        {/* Time labels */}
+        <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-gray-400 mt-2">
+          <span>{data.length > 0 ? new Date(data[0].timestamp).toLocaleTimeString() : ''}</span>
+          <span>{data.length > 0 ? new Date(data[data.length - 1].timestamp).toLocaleTimeString() : ''}</span>
+        </div>
+        
+        {/* Y-axis labels */}
+        <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-400 -ml-16">
+          <span>{formatValue(maxValue)}</span>
+          <span>{formatValue(maxValue * 0.75)}</span>
+          <span>{formatValue(maxValue * 0.5)}</span>
+          <span>{formatValue(maxValue * 0.25)}</span>
+          <span>{formatValue(0)}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
               key={i}
               cx={i * 10}
               cy={200 - ((d.value - minValue) / (maxValue - minValue)) * 180}

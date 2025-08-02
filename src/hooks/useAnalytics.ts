@@ -1,12 +1,14 @@
 import { useState, useCallback } from 'react';
 import { AnalyticsData, TimeRange } from '../types';
+import { useAuth } from '../contexts/AuthContext';
 
 export const useAnalytics = () => {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { token } = useAuth();
 
-  const fetchAnalytics = useCallback(async (timeRange: TimeRange) => {
+  const fetchAnalytics = useCallback(async (timeRange: TimeRange, limit: number = 10) => {
     setLoading(true);
     setError(null);
 
@@ -32,10 +34,12 @@ export const useAnalytics = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           startTime,
           endTime,
+          limit,
         }),
       });
 
@@ -51,7 +55,7 @@ export const useAnalytics = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [token]);
 
   return {
     analytics,

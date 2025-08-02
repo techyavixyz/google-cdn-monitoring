@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Globe, MapPin, ExternalLink, RefreshCw, AlertCircle } from 'lucide-react';
 import { TimeRangeSelector } from './TimeRangeSelector';
+import { TopUsageSelector } from './TopUsageSelector';
 import { LoadingSpinner } from './LoadingSpinner';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { TimeRange } from '../types';
@@ -12,14 +13,15 @@ export const AnalyticsPage: React.FC = () => {
     hours: 24
   });
 
+  const [topLimit, setTopLimit] = useState(10);
   const { analytics, loading, error, fetchAnalytics } = useAnalytics();
 
   useEffect(() => {
-    fetchAnalytics(selectedRange);
-  }, [selectedRange, fetchAnalytics]);
+    fetchAnalytics(selectedRange, topLimit);
+  }, [selectedRange, topLimit, fetchAnalytics]);
 
   const handleRefresh = () => {
-    fetchAnalytics(selectedRange);
+    fetchAnalytics(selectedRange, topLimit);
   };
 
   const handleRangeChange = (range: TimeRange) => {
@@ -50,6 +52,15 @@ export const AnalyticsPage: React.FC = () => {
         onRangeChange={handleRangeChange}
         loading={loading}
       />
+
+      {/* Top Usage Selector */}
+      <div className="flex justify-end">
+        <TopUsageSelector
+          value={topLimit}
+          onChange={setTopLimit}
+          label="Show"
+        />
+      </div>
 
       {/* Error Display */}
       {error && (

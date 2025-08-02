@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { CDNMetrics, TimeRange } from '../types';
+import { useAuth } from '../contexts/AuthContext';
 
 export const useMetrics = () => {
   const [metrics, setMetrics] = useState<CDNMetrics | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { token } = useAuth();
 
   const fetchMetrics = useCallback(async (timeRange: TimeRange) => {
     setLoading(true);
@@ -32,6 +34,7 @@ export const useMetrics = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           startTime,
@@ -51,7 +54,7 @@ export const useMetrics = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [token]);
 
   return {
     metrics,
