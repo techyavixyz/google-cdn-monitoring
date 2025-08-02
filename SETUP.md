@@ -26,13 +26,13 @@ The database will be automatically initialized with:
 - Database: `kloudscope`
 - User: `kloudscope_user`
 - Password: `kloudscope_password`
-- Default admin user: `admin` / `admin123`
+- Port: `5334` (host) -> `5432` (container)
 
 ### Verify Database Connection
 
 ```bash
 # Connect to PostgreSQL (optional)
-docker exec -it kloudscope-postgres psql -U kloudscope_user -d kloudscope
+docker exec -it kloudscope-postgres psql -U kloudscope_user -d kloudscope -p 5432
 
 # List tables
 \dt
@@ -67,7 +67,7 @@ nano .env
 
 ```env
 NODE_ENV=development
-DATABASE_URL=postgresql://kloudscope_user:kloudscope_password@localhost:5432/kloudscope
+DATABASE_URL=postgresql://kloudscope_user:kloudscope_password@localhost:5334/kloudscope
 JWT_SECRET=your-super-secret-jwt-key-change-in-production-make-it-very-long-and-random
 GOOGLE_CLOUD_PROJECT_ID=your-actual-project-id
 ```
@@ -102,8 +102,10 @@ You should see:
 🚀 KloudScope Backend running on http://localhost:3001
 📊 CDN Analytics API ready
 🔐 Authentication enabled
+✅ Admin user created successfully (admin/admin123)
 ```
 
+**Note:** The admin user (`admin`/`admin123`) will be automatically created when the backend starts for the first time. If it already exists, it will be skipped.
 ## Step 3: Frontend Setup
 
 ### Install Dependencies

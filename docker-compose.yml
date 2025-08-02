@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: kloudscope_user
       POSTGRES_PASSWORD: kloudscope_password
     ports:
-      - "5432:5432"
+      - "5334:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
