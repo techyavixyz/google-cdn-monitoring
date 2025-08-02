@@ -28,3 +28,30 @@ export interface TimeRange {
   start?: Date;
   end?: Date;
 }
+
+export interface AnalyticsData {
+  topIps: {
+    ip: string;
+    count: number;
+    countFormatted: string;
+    region: string;
+    topUrl: string;
+    location: {
+      city: string;
+      region: string;
+      country: string;
+      ll: [number, number];
+    } | null;
+  }[];
+  topCountries: {
+    country: string;
+    count: number;
+    countFormatted: string;
+  }[];
+  totalEntries: number;
+  timeRange: {
+    start: string;
+    end: string;
+    duration: string;
+  };
+}
