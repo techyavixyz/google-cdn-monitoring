@@ -6,8 +6,8 @@ services:
     container_name: kloudscope-postgres
     environment:
       POSTGRES_DB: kloudscope
-      POSTGRES_USER: kloudscope_user
-      POSTGRES_PASSWORD: kloudscope_password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5334:5432"
     volumes:
