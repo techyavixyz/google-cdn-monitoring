@@ -12,27 +12,10 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - kloudscope-network
-
-  backend:
-    build: ./backend
-    container_name: kloudscope-backend
-    ports:
-      - "3001:3001"
-    environment:
-      - NODE_ENV=development
-      - DATABASE_URL=postgresql://kloudscope_user:kloudscope_password@postgres:5432/kloudscope
-      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
-      - GOOGLE_CLOUD_PROJECT_ID=mogi-io
-    depends_on:
-      - postgres
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    networks:
-      - kloudscope-network
+    restart: unless-stopped
 
 volumes:
   postgres_data:
