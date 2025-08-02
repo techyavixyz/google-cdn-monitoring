@@ -152,7 +152,7 @@ router.post('/change-password', authenticateToken, async (req, res) => {
 
     // Update password
     await pool.query(
-      'UPDATE users SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+      'UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2',
       [newPasswordHash, userId]
     );
 
