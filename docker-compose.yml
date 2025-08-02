@@ -6,13 +6,19 @@ services:
     container_name: kloudscope-postgres
     environment:
       POSTGRES_DB: kloudscope
-      POSTGRES_USER: postgres
+      POSTGRES_USER: postgres  
       POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
     ports:
       - "5334:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - kloudscope-network
     restart: unless-stopped
