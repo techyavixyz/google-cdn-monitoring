@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import metricsRoutes from './routes/metrics.js';
 import analyticsRoutes from './routes/analytics.js';
+import { initializeSchema } from './utils/initSchema.js';
 import { initializeAdminUser } from './utils/initAdmin.js';
 
 dotenv.config();
@@ -29,7 +30,10 @@ app.listen(port, async () => {
   console.log(`🚀 KloudScope Backend running on http://localhost:${port}`);
   console.log(`📊 CDN Analytics API ready`);
   console.log(`🔐 Authentication enabled`);
-  
-  // Initialize admin user
+
+  // Initialize DB schema before anything else
+  await initializeSchema();
+
+  // Then initialize default admin user
   await initializeAdminUser();
 });

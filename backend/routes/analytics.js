@@ -25,7 +25,7 @@ router.post('/', authenticateToken, async (req, res) => {
 
     const [entries] = await logging.getEntries({
       filter,
-      pageSize: 5000,
+      pageSize: 500,
     });
 
     const ipMap = {};
