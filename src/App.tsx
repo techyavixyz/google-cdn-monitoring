@@ -4,12 +4,18 @@ import { Navigation } from './components/Navigation';
 import { HomePage } from './components/HomePage';
 import { MetricsPage } from './components/MetricsPage';
 import { AnalyticsPage } from './components/AnalyticsPage';
+import { PasswordChangeModal } from './components/PasswordChangeModal';
 import { Footer } from './components/Footer';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 const AppContent: React.FC = () => {
   const [currentView, setCurrentView] = useState<'home' | 'metrics' | 'analytics'>('home');
-  const { user, logout } = useAuth();
+  const { user, logout, requiresPasswordChange, setRequiresPasswordChange } = useAuth();
+
+  const handlePasswordChanged = () => {
+    localStorage.setItem('kloudscope_password_changed', 'true');
+    setRequiresPasswordChange(false);
+  };
 
   const renderCurrentView = () => {
     if (!user) {
@@ -75,6 +81,13 @@ const AppContent: React.FC = () => {
         <main className="max-w-7xl mx-auto px-6 py-8">
           {renderCurrentView()}
         </main>
+
+        {/* Password Change Modal */}
+        <PasswordChangeModal
+          isOpen={requiresPasswordChange}
+          onClose={() => {}} // Prevent closing without changing password
+          onPasswordChanged={handlePasswordChanged}
+        />
 
         <Footer />
       </div>

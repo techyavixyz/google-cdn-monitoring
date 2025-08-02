@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Globe, MapPin, ExternalLink, RefreshCw, AlertCircle } from 'lucide-react';
+import { Users, Globe, MapPin, ExternalLink, RefreshCw, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { TimeRangeSelector } from './TimeRangeSelector';
 import { TopUsageSelector } from './TopUsageSelector';
+import { AnalyticsChart } from './AnalyticsChart';
 import { LoadingSpinner } from './LoadingSpinner';
 import { useAnalytics } from '../hooks/useAnalytics';
+import { humanNumber } from '../utils/formatters';
 import { TimeRange } from '../types';
 
 export const AnalyticsPage: React.FC = () => {
@@ -14,6 +16,7 @@ export const AnalyticsPage: React.FC = () => {
   });
 
   const [topLimit, setTopLimit] = useState(10);
+  const [showFullUrls, setShowFullUrls] = useState(false);
   const { analytics, loading, error, fetchAnalytics } = useAnalytics();
 
   useEffect(() => {
@@ -93,7 +96,7 @@ export const AnalyticsPage: React.FC = () => {
                 </div>
                 <h3 className="text-lg font-semibold text-white">Total Requests</h3>
               </div>
-              <p className="text-2xl font-bold text-white">{analytics.totalEntries.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-white">{humanNumber(analytics.totalEntries)}</p>
             </div>
 
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50">
@@ -117,6 +120,21 @@ export const AnalyticsPage: React.FC = () => {
             </div>
           </div>
 
+          {/* Time Series Chart */}
+          {analytics.timeSeries && analytics.timeSeries.length > 0 && (
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 overflow-hidden">
+              <div className="p-6 border-b border-gray-700/50">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <Users className="w-5 h-5 text-purple-400" />
+                  Request Traffic Over Time
+                </h3>
+              </div>
+              <div className="p-6">
+                <AnalyticsChart data={analytics.timeSeries} />
+              </div>
+            </div>
+          )}
+
           {/* Top Countries and IPs */}
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Top Countries */}
@@ -137,7 +155,7 @@ export const AnalyticsPage: React.FC = () => {
                         </span>
                         <span className="text-white font-medium">{country.country}</span>
                       </div>
-                      <span className="text-blue-400 font-semibold">{country.countFormatted}</span>
+                      <span className="text-blue-400 font-semibold">{humanNumber(country.count)}</span>
                     </div>
                   ))}
                 </div>
@@ -147,10 +165,19 @@ export const AnalyticsPage: React.FC = () => {
             {/* Top IPs */}
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 overflow-hidden">
               <div className="p-6 border-b border-gray-700/50">
-                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                   <Users className="w-5 h-5 text-purple-400" />
                   Top Client IPs by Request Count
-                </h3>
+                  </h3>
+                  <button
+                    onClick={() => setShowFullUrls(!showFullUrls)}
+                    className="flex items-center gap-2 px-3 py-1 text-sm bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 hover:text-white rounded-lg transition-all duration-200"
+                  >
+                    {showFullUrls ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showFullUrls ? 'Hide URLs' : 'Show Full URLs'}
+                  </button>
+                </div>
               </div>
               <div className="p-6">
                 <div className="space-y-4">
@@ -163,17 +190,19 @@ export const AnalyticsPage: React.FC = () => {
                           </span>
                           <span className="text-white font-mono text-sm">{ip.ip}</span>
                         </div>
-                        <span className="text-purple-400 font-semibold">{ip.countFormatted}</span>
+                        <span className="text-purple-400 font-semibold">{humanNumber(ip.count)}</span>
                       </div>
                       <div className="ml-9 space-y-1">
                         <p className="text-gray-400 text-sm flex items-center gap-1">
                           <MapPin className="w-3 h-3" />
                           {ip.region}
                         </p>
-                        <p className="text-gray-400 text-sm flex items-center gap-1">
+                        <div className="text-gray-400 text-sm flex items-start gap-1">
                           <ExternalLink className="w-3 h-3" />
-                          <span className="truncate max-w-xs">{ip.topUrl}</span>
-                        </p>
+                          <span className={showFullUrls ? "break-all" : "truncate max-w-xs"}>
+                            {ip.topUrl}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   ))}

@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
-import { User, Lock, Mail, UserPlus, LogIn, Eye, EyeOff } from 'lucide-react';
+import { User, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export const LoginForm: React.FC = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
-    email: '',
     password: '',
-    fullName: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login, register } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,11 +19,7 @@ export const LoginForm: React.FC = () => {
     setLoading(true);
 
     try {
-      if (isLogin) {
-        await login(formData.username, formData.password);
-      } else {
-        await register(formData.username, formData.email, formData.password, formData.fullName);
-      }
+      await login(formData.username, formData.password);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -48,10 +41,10 @@ export const LoginForm: React.FC = () => {
           <User className="w-6 h-6 text-blue-400" />
         </div>
         <h2 className="text-2xl font-bold text-white mb-2">
-          {isLogin ? 'Welcome Back' : 'Create Account'}
+          Welcome Back
         </h2>
         <p className="text-gray-400">
-          {isLogin ? 'Sign in to access KloudScope' : 'Join KloudScope today'}
+          Sign in to access KloudScope
         </p>
       </div>
 
@@ -79,46 +72,6 @@ export const LoginForm: React.FC = () => {
             />
           </div>
         </div>
-
-        {!isLogin && (
-          <>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Email
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700/50 border border-gray-600 rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-200"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Full Name
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700/50 border border-gray-600 rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-200"
-                  placeholder="Enter your full name"
-                  required
-                />
-              </div>
-            </div>
-          </>
-        )}
 
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -154,29 +107,18 @@ export const LoginForm: React.FC = () => {
             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
           ) : (
             <>
-              {isLogin ? <LogIn className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
-              {isLogin ? 'Sign In' : 'Create Account'}
+              <LogIn className="w-4 h-4" />
+              Sign In
             </>
           )}
         </button>
       </form>
 
-      <div className="mt-6 text-center">
-        <button
-          onClick={() => setIsLogin(!isLogin)}
-          className="text-blue-400 hover:text-blue-300 text-sm transition-colors duration-200"
-        >
-          {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
-        </button>
-      </div>
-
-      {isLogin && (
-        <div className="mt-4 p-3 bg-blue-900/20 border border-blue-800/50 rounded-lg">
+      <div className="mt-4 p-3 bg-blue-900/20 border border-blue-800/50 rounded-lg">
           <p className="text-blue-300 text-xs text-center">
             Demo credentials: <strong>admin</strong> / <strong>admin123</strong>
           </p>
         </div>
-      )}
     </div>
   );
 };

@@ -104,7 +104,7 @@ export const MetricsPage: React.FC = () => {
           </div>
 
           {/* Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <Chart
               data={metrics.timeSeries.requests}
               title="Requests Over Time"

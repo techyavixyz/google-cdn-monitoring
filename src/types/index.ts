@@ -48,6 +48,10 @@ export interface AnalyticsData {
     count: number;
     countFormatted: string;
   }[];
+  timeSeries: {
+    timestamp: string;
+    requests: number;
+  }[];
   totalEntries: number;
   timeRange: {
     start: string;
