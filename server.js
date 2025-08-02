@@ -1,11 +1,15 @@
-const express = require('express');
-const cors = require('cors');
-const { DateTime } = require('luxon');
-const monitoring = require('@google-cloud/monitoring');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { DateTime } from 'luxon';
+import monitoring from '@google-cloud/monitoring';
+
+dotenv.config();
 
 const app = express();
 const port = 3001;
+
+
 
 app.use(cors());
 app.use(express.json());
