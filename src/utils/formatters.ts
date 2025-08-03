@@ -9,25 +9,33 @@ export function humanBytes(bytes: number): string {
 }
 
 export function humanNumber(n: number): string {
-  if (n >= 1e9) return `${(n / 1e9).toFixed(2)}B`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(2)}M`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(2)}K`;
-  return n.toString();
-}
-
-export function humanNumberShort(n: number): string {
-  if (n >= 1e9) return `${(n / 1e9).toFixed(2)}B`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(2)}M`;
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
   if (n >= 1e3) return `${(n / 1e3).toFixed(1)}K`;
   return n.toString();
 }
 
-export function humanNumberLarge(n: number): string {
-  if (n >= 1e9) return `${(n / 1e9).toFixed(2)}B`;
+export function humanNumberShort(n: number): string {
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
   if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K`;
+  if (n >= 1e3) return `${Math.round(n / 1e3)}K`;
   return n.toString();
 }
+
+export function humanNumberLarge(n: number): string {
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
+  if (n >= 1e3) return `${Math.round(n / 1e3)}K`;
+  return n.toString();
+}
+
+export function humanNumberForDisplay(n: number): string {
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
+  if (n >= 1e3) return `${Math.round(n / 1e3)}K`;
+  return n.toString();
+}
+
 export function formatTimestamp(timestamp: string): string {
   return new Date(timestamp).toLocaleString();
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { humanNumber } from '../utils/formatters';
+import { humanNumberForDisplay } from '../utils/formatters';
 
 interface AnalyticsChartProps {
   data: Array<{
@@ -12,18 +12,24 @@ interface AnalyticsChartProps {
 export const AnalyticsChart: React.FC<AnalyticsChartProps> = ({ data }) => {
   const formatXAxisLabel = (tickItem: string) => {
     const date = new Date(tickItem);
+    if (isNaN(date.getTime())) {
+      return 'Invalid Date';
+    }
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+      const date = new Date(label);
+      const dateString = isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleString();
+      
       return (
         <div className="bg-gray-800 border border-gray-600 rounded-lg p-3 shadow-lg">
           <p className="text-gray-300 text-sm mb-1">
-            {new Date(label).toLocaleString()}
+            {dateString}
           </p>
           <p className="text-purple-400 font-semibold">
-            Requests: {humanNumber(payload[0].value)}
+            Requests: {humanNumberForDisplay(payload[0].value)}
           </p>
         </div>
       );
@@ -44,7 +50,7 @@ export const AnalyticsChart: React.FC<AnalyticsChartProps> = ({ data }) => {
             interval="preserveStartEnd"
           />
           <YAxis 
-            tickFormatter={humanNumber}
+            tickFormatter={humanNumberForDisplay}
             stroke="#9CA3AF"
             fontSize={12}
           />
