@@ -24,6 +24,7 @@ export const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showSkipOption, setShowSkipOption] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +62,6 @@ export const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
       }
 
       onPasswordChanged();
-      onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -69,6 +69,10 @@ export const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
     }
   };
 
+  const handleSkip = () => {
+    localStorage.setItem('kloudscope_password_changed', 'skipped');
+    onPasswordChanged();
+  };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
       ...prev,
@@ -92,9 +96,9 @@ export const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
           <div className="inline-flex p-3 bg-yellow-600/20 rounded-lg mb-4">
             <AlertCircle className="w-6 h-6 text-yellow-400" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Change Password Required</h2>
+          <h2 className="text-2xl font-bold text-white mb-2">Change Default Password</h2>
           <p className="text-gray-400">
-            For security reasons, please change your default password before continuing.
+            For security reasons, we recommend changing your default password.
           </p>
         </div>
 
@@ -180,21 +184,39 @@ export const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
             </div>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <>
-                <CheckCircle className="w-4 h-4" />
-                Change Password
-              </>
+          <div className="space-y-3">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  <CheckCircle className="w-4 h-4" />
+                  Change Password
+                </>
+              )}
+            </button>
+            
+            {showSkipOption && (
+              <button
+                type="button"
+                onClick={handleSkip}
+                className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                Skip for Now
+              </button>
             )}
-          </button>
+          </div>
         </form>
+        
+        <div className="mt-4 p-3 bg-yellow-900/20 border border-yellow-800/50 rounded-lg">
+          <p className="text-yellow-300 text-xs text-center">
+            You can change your password later from the user menu
+          </p>
+        </div>
       </div>
     </div>
   );

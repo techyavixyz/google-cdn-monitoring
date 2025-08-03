@@ -118,6 +118,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         <div className="mt-6">
           <p className="text-sm text-gray-500">
             Welcome back, <span className="text-blue-400 font-semibold">{user.fullName || user.username}</span>
+            {user.username === 'admin' && localStorage.getItem('kloudscope_password_changed') === 'skipped' && (
+              <span className="ml-2 text-yellow-400 text-xs">(Using default password)</span>
+            )}
           </p>
         </div>
       </div>

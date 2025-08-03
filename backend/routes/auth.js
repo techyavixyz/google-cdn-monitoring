@@ -132,6 +132,9 @@ router.post('/change-password', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Current password and new password are required' });
     }
 
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'New password must be at least 6 characters long' });
+    }
     // Get current user
     const userResult = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
     if (userResult.rows.length === 0) {
@@ -156,7 +159,15 @@ router.post('/change-password', authenticateToken, async (req, res) => {
       [newPasswordHash, userId]
     );
 
-    res.json({ message: 'Password changed successfully' });
+    res.json({ 
+      message: 'Password changed successfully',
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        fullName: user.full_name
+      }
+    });
   } catch (error) {
     console.error('Change password error:', error);
     res.status(500).json({ error: 'Internal server error' });

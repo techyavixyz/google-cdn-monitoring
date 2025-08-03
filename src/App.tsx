@@ -17,6 +17,10 @@ const AppContent: React.FC = () => {
     setRequiresPasswordChange(false);
   };
 
+  const handlePasswordSkipped = () => {
+    localStorage.setItem('kloudscope_password_changed', 'skipped');
+    setRequiresPasswordChange(false);
+  };
   const renderCurrentView = () => {
     if (!user) {
       return <HomePage onNavigate={setCurrentView} />;
@@ -85,7 +89,7 @@ const AppContent: React.FC = () => {
         {/* Password Change Modal */}
         <PasswordChangeModal
           isOpen={requiresPasswordChange}
-          onClose={() => {}} // Prevent closing without changing password
+          onClose={handlePasswordSkipped}
           onPasswordChanged={handlePasswordChanged}
         />
 

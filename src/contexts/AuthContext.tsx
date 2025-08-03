@@ -40,19 +40,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
-      
-      // Check if user is admin with default password
-      const userData = JSON.parse(storedUser);
-      if (userData.username === 'admin') {
-        const passwordChanged = localStorage.getItem('kloudscope_password_changed');
-        if (!passwordChanged) {
-          setRequiresPasswordChange(true);
-        }
-      }
     }
     setLoading(false);
   }, []);
 
+  // Check if password change is required after login
+  const checkPasswordChangeRequired = (userData: User) => {
+    if (userData.username === 'admin') {
+      const passwordChanged = localStorage.getItem('kloudscope_password_changed');
+      if (!passwordChanged) {
+        setRequiresPasswordChange(true);
+        return true;
+      }
+    }
+    return false;
+  };
   const login = async (username: string, password: string) => {
     const response = await fetch('http://localhost:3001/api/auth/login', {
       method: 'POST',
@@ -74,14 +76,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('kloudscope_token', data.token);
     localStorage.setItem('kloudscope_user', JSON.stringify(data.user));
 
-    
-    // Check if user is admin with default password
-    if (data.user.username === 'admin') {
-      const passwordChanged = localStorage.getItem('kloudscope_password_changed');
-      if (!passwordChanged) {
-        setRequiresPasswordChange(true);
-      }
-    }
+    // Check if password change is required only after successful login
+    checkPasswordChangeRequired(data.user);
   };
 
   const logout = () => {
@@ -90,7 +86,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setRequiresPasswordChange(false);
     localStorage.removeItem('kloudscope_token');
     localStorage.removeItem('kloudscope_user');
-    localStorage.removeItem('kloudscope_password_changed');
   };
 
   return (
