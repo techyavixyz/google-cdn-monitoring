@@ -5,10 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "server": "cd backend && npm run dev",
-    "dev:full": "npm run server & npm run dev",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
