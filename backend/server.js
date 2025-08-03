@@ -34,6 +34,6 @@ app.listen(port, async () => {
   // Initialize DB schema before anything else
   await initializeSchema();
 
-  // Then initialize default admin user
+  // Check for existing users (first time setup detection)
   await initializeAdminUser();
 });

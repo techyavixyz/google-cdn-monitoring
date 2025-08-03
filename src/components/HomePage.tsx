@@ -33,10 +33,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                   Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">KloudScope</span>
                 </h1>
                 <p className="text-xl text-gray-400 mb-6">
-                  First Time Setup - Create Your Admin Account
+                  First Time Setup - Create Your Account
                 </p>
                 <p className="text-gray-300 leading-relaxed">
-                  Get started with KloudScope by creating your administrator account. This is a one-time setup 
+                  Get started with KloudScope by creating your account. This is a one-time setup 
                   that will give you access to comprehensive Google Cloud CDN analytics and monitoring capabilities.
                 </p>
               </div>
@@ -49,7 +49,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 </div>
                 <div className="bg-gray-800/30 rounded-lg p-4 text-center">
                   <Shield className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-                  <p className="text-white font-semibold">Admin Access</p>
+                  <p className="text-white font-semibold">Full Access</p>
                   <p className="text-gray-400 text-sm">Full dashboard control</p>
                 </div>
               </div>

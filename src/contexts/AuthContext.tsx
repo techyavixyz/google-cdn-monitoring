@@ -50,10 +50,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const checkFirstTimeSetup = async () => {
     try {
       const response = await fetch('http://localhost:3001/api/auth/check-setup');
+      
+      if (!response.ok) {
+        console.warn('Backend not available, assuming first time setup');
+        setIsFirstTimeSetup(true);
+        return;
+      }
+      
       const data = await response.json();
       setIsFirstTimeSetup(data.isFirstTimeSetup);
     } catch (error) {
-      console.error('Error checking setup status:', error);
+      console.warn('Backend not available, assuming first time setup:', error.message);
+      setIsFirstTimeSetup(true);
     }
   };
 

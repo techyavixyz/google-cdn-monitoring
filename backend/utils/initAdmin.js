@@ -14,11 +14,31 @@ export const initializeAdminUser = async () => {
     );
 
     if (existingUser.rows.length > 0) {
-      console.log('✅ Admin user already exists, skipping creation');
+      console.log('✅ User already exists, skipping creation');
       return;
     }
 
-    // Create admin user
+    // No users exist, this is first time setup
+    console.log('🔧 First time setup detected - no users found');
+    console.log('💡 Please complete setup through the web interface');
+  } catch (error) {
+    console.error('❌ Error checking user setup:', error);
+    
+    // If it's a connection error, provide helpful debugging info
+    if (error.code === 'ECONNREFUSED') {
+      console.error('💡 Make sure PostgreSQL is running: docker-compose up -d');
+    } else if (error.code === '28P01') {
+      console.error('💡 Authentication failed - check database credentials');
+    } else if (error.code === '3D000') {
+      console.error('💡 Database does not exist - check database initialization');
+    }
+  }
+};
+
+// Legacy function - kept for backward compatibility
+export const createDefaultAdmin = async () => {
+  try {
+    // Create default admin user (only for development/testing)
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash('admin123', saltRounds);
 
@@ -29,15 +49,6 @@ export const initializeAdminUser = async () => {
 
     console.log('✅ Admin user created successfully (admin/admin123)');
   } catch (error) {
-    console.error('❌ Error initializing admin user:', error);
-    
-    // If it's a connection error, provide helpful debugging info
-    if (error.code === 'ECONNREFUSED') {
-      console.error('💡 Make sure PostgreSQL is running: docker-compose up -d');
-    } else if (error.code === '28P01') {
-      console.error('💡 Authentication failed - check database credentials');
-    } else if (error.code === '3D000') {
-      console.error('💡 Database does not exist - check database initialization');
-    }
+    console.error('❌ Error creating default admin user:', error);
   }
 };

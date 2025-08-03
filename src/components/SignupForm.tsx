@@ -52,7 +52,7 @@ export const SignupForm: React.FC = () => {
           First Time Setup
         </h2>
         <p className="text-gray-400">
-          Create your admin account to get started
+          Create your account to get started
         </p>
       </div>
 
@@ -75,11 +75,11 @@ export const SignupForm: React.FC = () => {
               value={formData.username}
               onChange={handleInputChange}
               className="w-full bg-gray-700/50 border border-gray-600 rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-400 focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none transition-all duration-200"
-              placeholder="Enter username"
+              placeholder="Enter username (default: admin)"
               required
             />
           </div>
-          <p className="text-xs text-gray-500 mt-1">Default is 'admin', but you can change it</p>
+          <p className="text-xs text-gray-500 mt-1">You can change the default username if needed</p>
         </div>
 
         <div>

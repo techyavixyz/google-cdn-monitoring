@@ -5,7 +5,7 @@ import { TopUsageSelector } from './TopUsageSelector';
 import { AnalyticsChart } from './AnalyticsChart';
 import { LoadingSpinner } from './LoadingSpinner';
 import { useAnalytics } from '../hooks/useAnalytics';
-import { humanNumber, humanNumberShort } from '../utils/formatters';
+import { humanNumber, humanNumberShort, humanNumberLarge } from '../utils/formatters';
 import { TimeRange } from '../types';
 
 export const AnalyticsPage: React.FC = () => {
@@ -96,7 +96,8 @@ export const AnalyticsPage: React.FC = () => {
                 </div>
                 <h3 className="text-lg font-semibold text-white">Total Requests</h3>
               </div>
-              <p className="text-2xl font-bold text-white">{humanNumberShort(analytics.totalEntries)}</p>
+              <p className="text-2xl font-bold text-white">{humanNumberLarge(analytics.totalEntries)}</p>
+              <p className="text-sm text-gray-400 mt-1">{analytics.totalEntries.toLocaleString()} requests</p>
             </div>
 
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50">
@@ -107,6 +108,7 @@ export const AnalyticsPage: React.FC = () => {
                 <h3 className="text-lg font-semibold text-white">Countries</h3>
               </div>
               <p className="text-2xl font-bold text-white">{analytics.topCountries.length}</p>
+              <p className="text-sm text-gray-400 mt-1">unique countries</p>
             </div>
 
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50">
@@ -117,6 +119,7 @@ export const AnalyticsPage: React.FC = () => {
                 <h3 className="text-lg font-semibold text-white">Unique IPs</h3>
               </div>
               <p className="text-2xl font-bold text-white">{analytics.topIps.length}</p>
+              <p className="text-sm text-gray-400 mt-1">unique IP addresses</p>
             </div>
           </div>
 
@@ -155,7 +158,7 @@ export const AnalyticsPage: React.FC = () => {
                         </span>
                         <span className="text-white font-medium">{country.country}</span>
                       </div>
-                      <span className="text-blue-400 font-semibold">{humanNumberShort(country.count)}</span>
+                      <span className="text-blue-400 font-semibold">{humanNumberLarge(country.count)}</span>
                     </div>
                   ))}
                 </div>
@@ -190,7 +193,7 @@ export const AnalyticsPage: React.FC = () => {
                           </span>
                           <span className="text-white font-mono text-sm">{ip.ip}</span>
                         </div>
-                        <span className="text-purple-400 font-semibold">{humanNumberShort(ip.count)}</span>
+                        <span className="text-purple-400 font-semibold">{humanNumberLarge(ip.count)}</span>
                       </div>
                       <div className="ml-9 space-y-1">
                         <p className="text-gray-400 text-sm flex items-center gap-1">

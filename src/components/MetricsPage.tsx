@@ -124,7 +124,7 @@ export const MetricsPage: React.FC = () => {
           {metrics.timeSeries.requests.length > 0 && (
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 overflow-hidden">
               <div className="p-6 border-b border-gray-700/50">
-                <h3 className="text-lg font-semibold text-white">Recent Data Points</h3>
+                <h3 className="text-lg font-semibold text-white">Recent Data Points ({selectedRange.label})</h3>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
