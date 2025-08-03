@@ -2,15 +2,69 @@ import React from 'react';
 import { Globe, Activity, Users, Zap, TrendingUp, Shield, BarChart3 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { LoginForm } from './LoginForm';
+import { SignupForm } from './SignupForm';
+import { ForgotPasswordForm } from './ForgotPasswordForm';
+import { ResetPasswordForm } from './ResetPasswordForm';
 
 interface HomePageProps {
   onNavigate: (view: 'metrics' | 'analytics') => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
-  const { user } = useAuth();
+  const { user, isFirstTimeSetup } = useAuth();
+  const [authView, setAuthView] = React.useState<'login' | 'signup' | 'forgot' | 'reset'>('login');
+  const [resetEmail, setResetEmail] = React.useState('');
 
   if (!user) {
+    // Show signup form for first-time setup
+    if (isFirstTimeSetup) {
+      return (
+        <div className="min-h-[80vh] flex items-center justify-center">
+          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+            {/* Left side - Welcome content */}
+            <div className="space-y-8">
+              <div className="text-center lg:text-left">
+                <div className="flex justify-center lg:justify-start mb-6">
+                  <div className="p-4 bg-gradient-to-br from-green-600 to-blue-600 rounded-2xl">
+                    <BarChart3 className="w-12 h-12 text-white" />
+                  </div>
+                </div>
+                <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">
+                  Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">KloudScope</span>
+                </h1>
+                <p className="text-xl text-gray-400 mb-6">
+                  First Time Setup - Create Your Admin Account
+                </p>
+                <p className="text-gray-300 leading-relaxed">
+                  Get started with KloudScope by creating your administrator account. This is a one-time setup 
+                  that will give you access to comprehensive Google Cloud CDN analytics and monitoring capabilities.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gray-800/30 rounded-lg p-4 text-center">
+                  <Activity className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                  <p className="text-white font-semibold">Secure Setup</p>
+                  <p className="text-gray-400 text-sm">One-time configuration</p>
+                </div>
+                <div className="bg-gray-800/30 rounded-lg p-4 text-center">
+                  <Shield className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+                  <p className="text-white font-semibold">Admin Access</p>
+                  <p className="text-gray-400 text-sm">Full dashboard control</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right side - Signup form */}
+            <div className="flex justify-center lg:justify-end">
+              <SignupForm />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show appropriate auth form based on current view
     return (
       <div className="min-h-[80vh] flex items-center justify-center">
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
@@ -65,7 +119,21 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
           {/* Right side - Login form */}
           <div className="flex justify-center lg:justify-end">
-            <LoginForm />
+            {authView === 'login' && (
+              <LoginForm onForgotPassword={() => setAuthView('forgot')} />
+            )}
+            {authView === 'forgot' && (
+              <ForgotPasswordForm 
+                onBack={() => setAuthView('login')} 
+                onResetPassword={(email) => {
+                  setResetEmail(email);
+                  setAuthView('reset');
+                }}
+              />
+            )}
+            {authView === 'reset' && (
+              <ResetPasswordForm email={resetEmail} />
+            )}
           </div>
         </div>
       </div>

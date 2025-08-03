@@ -4,23 +4,13 @@ import { Navigation } from './components/Navigation';
 import { HomePage } from './components/HomePage';
 import { MetricsPage } from './components/MetricsPage';
 import { AnalyticsPage } from './components/AnalyticsPage';
-import { PasswordChangeModal } from './components/PasswordChangeModal';
 import { Footer } from './components/Footer';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 const AppContent: React.FC = () => {
   const [currentView, setCurrentView] = useState<'home' | 'metrics' | 'analytics'>('home');
-  const { user, logout, requiresPasswordChange, setRequiresPasswordChange } = useAuth();
+  const { user, logout } = useAuth();
 
-  const handlePasswordChanged = () => {
-    localStorage.setItem('kloudscope_password_changed', 'true');
-    setRequiresPasswordChange(false);
-  };
-
-  const handlePasswordSkipped = () => {
-    localStorage.setItem('kloudscope_password_changed', 'skipped');
-    setRequiresPasswordChange(false);
-  };
   const renderCurrentView = () => {
     if (!user) {
       return <HomePage onNavigate={setCurrentView} />;
@@ -86,12 +76,6 @@ const AppContent: React.FC = () => {
           {renderCurrentView()}
         </main>
 
-        {/* Password Change Modal */}
-        <PasswordChangeModal
-          isOpen={requiresPasswordChange}
-          onClose={handlePasswordSkipped}
-          onPasswordChanged={handlePasswordChanged}
-        />
 
         <Footer />
       </div>

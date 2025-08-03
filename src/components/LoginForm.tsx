@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { User, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
+import { User, Lock, LogIn, Eye, EyeOff, KeyRound } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
-export const LoginForm: React.FC = () => {
+interface LoginFormProps {
+  onForgotPassword: () => void;
+}
+
+export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
@@ -114,11 +118,16 @@ export const LoginForm: React.FC = () => {
         </button>
       </form>
 
-      <div className="mt-4 p-3 bg-blue-900/20 border border-blue-800/50 rounded-lg">
-          <p className="text-blue-300 text-xs text-center">
-            Demo credentials: <strong>admin</strong> / <strong>admin123</strong>
-          </p>
-        </div>
+      <div className="mt-4 text-center">
+        <button
+          onClick={onForgotPassword}
+          className="text-sm text-blue-400 hover:text-blue-300 transition-colors duration-200 flex items-center justify-center gap-1 mx-auto"
+        >
+          <KeyRound className="w-3 h-3" />
+          Forgot Password?
+        </button>
+      </div>
+
     </div>
   );
 };
